@@ -1,0 +1,13 @@
+FROM node:latest
+RUN apt-get update && apt-get install -y \
+npm install -g express \
+\ sleep 20
+\ npm install -g nodemon
+\ sleep 20
+WORKDIR /app
+COPY package*.json /app/
+#RUN npm install && mv /app/node_modules /node_modules
+COPY . /app
+EXPOSE 8084
+CMD [ "nodemon", "index.js" ]
+

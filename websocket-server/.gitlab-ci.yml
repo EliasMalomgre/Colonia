@@ -1,0 +1,20 @@
+stages: 
+    - deploy
+before_script: 
+    - echo "Start CI/CD"
+
+deploy: 
+    stage: deploy
+    image:
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [""]
+    script:
+        - echo "Deploying image"
+        - mkdir -p /kaniko/.docker
+        - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+        - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CI_REGISTRY_IMAGE:master
+    only:
+        - master
+    
+after_script:
+    - echo "Einde CI/CD"

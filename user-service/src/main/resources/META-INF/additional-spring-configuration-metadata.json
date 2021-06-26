@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "frontent.address",
+      "type": "java.lang.String",
+      "description": "Description for frontent.address."
+  }
+] }

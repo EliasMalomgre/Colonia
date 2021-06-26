@@ -1,0 +1,31 @@
+stages: 
+    - test
+    - deploy
+before_script: 
+    - echo "Start CI/CD"
+
+buildtest:
+    image: node:current
+    stage: test
+    script:
+        - echo "Testing fase"
+        - npm install
+        - npm run build
+    only:
+        - merge_requests
+
+deploy: 
+    stage: deploy
+    image:
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [""]
+    script:
+        - echo "Deploying image"
+        - mkdir -p /kaniko/.docker
+        - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+        - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+    only:
+        - master
+
+after_script:
+    - echo "Einde CI/CD"
